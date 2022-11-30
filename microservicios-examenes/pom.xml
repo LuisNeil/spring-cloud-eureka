@@ -8,10 +8,10 @@
 		<version>2.7.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.formacionbdi.microservicios.app</groupId>
-	<artifactId>microservicio-cursos</artifactId>
+	<groupId>com.formacionbdi.microservicios.app.examenes</groupId>
+	<artifactId>microservicios-examenes</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>microservicio-cursos</name>
+	<name>microservicios-examenes</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>19</java.version>
@@ -21,11 +21,6 @@
 		<dependency>
 			<groupId>com.formacionbdi.microservicios.commons</groupId>
 			<artifactId>commons-microservicios</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.formacionbdi.microservicios.commons.students</groupId>
-			<artifactId>commons-students</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>

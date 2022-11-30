@@ -1,5 +1,6 @@
 package com.formacionbdi.microservicios.app.cursos.models.entity;
 
+import com.formacionbdi.microservicios.commons.models.entity.Exam;
 import com.formacionbdi.microservicios.commons.students.models.entity.Student;
 
 import javax.persistence.*;
@@ -30,8 +31,12 @@ public class Course {
     @OneToMany(fetch = FetchType.LAZY)
     private List<Student> students;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Exam> exams;
+
     public Course() {
         this.students = new ArrayList<>();
+        this.exams = new ArrayList<>();
     }
 
     public Long getId() {
@@ -72,5 +77,21 @@ public class Course {
 
     public void deleteStudent(Student student) {
         this.students.remove(student);
+    }
+
+    public List<Exam> getExams() {
+        return exams;
+    }
+
+    public void setExams(List<Exam> exams) {
+        this.exams = exams;
+    }
+
+    public void addExam(Exam exam) {
+        this.exams.add(exam);
+    }
+
+    public void removeExam(Exam exam) {
+        this.exams.remove(exam);
     }
 }
