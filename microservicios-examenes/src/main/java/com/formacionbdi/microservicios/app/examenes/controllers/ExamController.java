@@ -4,17 +4,23 @@ package com.formacionbdi.microservicios.app.examenes.controllers;
 import com.formacionbdi.microservicios.app.examenes.services.ExamService;
 import com.formacionbdi.microservicios.commons.controllers.CommonController;
 import com.formacionbdi.microservicios.commons.models.entity.Exam;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
 public class ExamController extends CommonController<Exam, ExamService> {
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> edit(@RequestBody Exam exam, @PathVariable Long id){
+    public ResponseEntity<?> edit(@Valid @RequestBody Exam exam, BindingResult result, @PathVariable Long id){
+
+        if(result.hasErrors())
+            return this.validate(result);
 
         Optional<Exam> o = service.findById(id);
         if(o.isEmpty()){

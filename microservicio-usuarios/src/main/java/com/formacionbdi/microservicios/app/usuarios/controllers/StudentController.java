@@ -6,15 +6,20 @@ import com.formacionbdi.microservicios.commons.controllers.CommonController;
 import com.formacionbdi.microservicios.commons.students.models.entity.Student;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
 public class StudentController extends CommonController<Student, StudentService> {
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> edit(@RequestBody Student student, @PathVariable Long id){
+    public ResponseEntity<?> edit(@Valid @RequestBody Student student, BindingResult result, @PathVariable Long id ){
+        if(result.hasErrors()){
+            return this.validate(result);
+        }
         Optional<Student> o = service.findById(id);
         if(o.isEmpty()){
             return ResponseEntity.notFound().build();

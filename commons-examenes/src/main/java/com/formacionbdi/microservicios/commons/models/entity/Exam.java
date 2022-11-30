@@ -3,6 +3,8 @@ package com.formacionbdi.microservicios.commons.models.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,6 +17,7 @@ public class Exam {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotEmpty
     private String name;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -26,6 +29,7 @@ public class Exam {
     private List<Question> questions;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
     private Subject subject;
 
     @PrePersist

@@ -1,8 +1,9 @@
 package com.formacionbdi.microservicios.commons.students.models.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import java.util.Date;
-import java.util.Objects;
 
 @Entity
 @Table(name = "students")
@@ -12,8 +13,12 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotEmpty
     private String name;
+    @NotEmpty
     private String lastname;
+    @NotEmpty
+    @Email
     private String email;
 
     @Column(name = "create_at")

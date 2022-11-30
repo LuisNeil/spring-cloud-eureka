@@ -7,8 +7,10 @@ import com.formacionbdi.microservicios.commons.models.entity.Exam;
 import com.formacionbdi.microservicios.commons.students.models.entity.Student;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +18,10 @@ import java.util.Optional;
 public class CourseController extends CommonController<Course, CourseService> {
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> edit(@RequestBody Course course, @PathVariable Long id) {
+    public ResponseEntity<?> edit(@Valid @RequestBody Course course, BindingResult result, @PathVariable Long id) {
+        if(result.hasErrors())
+            return this.validate(result);
+
         Optional<Course> o = this.service.findById(id);
         if (o.isEmpty()) {
             return ResponseEntity.notFound().build();
