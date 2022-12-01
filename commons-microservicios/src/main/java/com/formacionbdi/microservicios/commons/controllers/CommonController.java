@@ -3,6 +3,7 @@ package com.formacionbdi.microservicios.commons.controllers;
 
 import com.formacionbdi.microservicios.commons.services.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -21,6 +22,11 @@ public class CommonController<E, S extends CommonService<E>> {
     @GetMapping("/")
     public ResponseEntity<?> list(){
         return ResponseEntity.ok(service.findAll());
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<?> list(Pageable pageable){
+        return ResponseEntity.ok(service.findAll(pageable));
     }
 
     @GetMapping("/{id}")
