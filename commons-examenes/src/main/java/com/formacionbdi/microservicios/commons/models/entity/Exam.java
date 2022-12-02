@@ -32,6 +32,9 @@ public class Exam {
     @NotNull
     private Subject subject;
 
+    @Transient
+    public boolean answered;
+
     @PrePersist
     public void prePersist(){
         this.createAt = new Date();
@@ -91,6 +94,14 @@ public class Exam {
     public void removeQuestion(Question question) {
         this.questions.remove(question);
         question.setExam(null);
+    }
+
+    public boolean isAnswered() {
+        return answered;
+    }
+
+    public void setAnswered(boolean answered) {
+        this.answered = answered;
     }
 
     @Override
