@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 public class CourseController extends CommonController<Course, CourseService> {
@@ -55,9 +56,20 @@ public class CourseController extends CommonController<Course, CourseService> {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(courseDb));
     }
 
-    @GetMapping("/student/{id}")
-    public ResponseEntity<?> findByStudentID(@PathVariable Long id){
-        return ResponseEntity.ok(service.findCourseByStudentId(id));
+    @GetMapping("/student/{studentId}")
+    public ResponseEntity<?> findByStudentID(@PathVariable Long studentId){
+        Course course = service.findCourseByStudentId(studentId);
+        if(course != null){
+            List<Long> examsIds = (List<Long>) service.findExamsIdsWithAnswerByStudentId(studentId);
+            List<Exam> exams = course.getExams().stream().peek(e -> {
+                if (examsIds.contains(e.getId())){
+                    e.setAnswered(true);
+                }
+            }).collect(Collectors.toList());
+
+            course.setExams(exams);
+        }
+        return ResponseEntity.ok(course);
     }
 
     @PutMapping("/{id}/assign-exams")
