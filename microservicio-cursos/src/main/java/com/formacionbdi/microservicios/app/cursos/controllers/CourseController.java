@@ -5,18 +5,33 @@ import com.formacionbdi.microservicios.app.cursos.services.CourseService;
 import com.formacionbdi.microservicios.commons.controllers.CommonController;
 import com.formacionbdi.microservicios.commons.models.entity.Exam;
 import com.formacionbdi.microservicios.commons.students.models.entity.Student;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
 public class CourseController extends CommonController<Course, CourseService> {
+
+    @Value("${config.balancer.test}")
+    private String testBalancer;
+
+    @GetMapping("/test-balancer")
+    public ResponseEntity<?> testBalancer() {
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("balancer", testBalancer);
+        response.put("courses", service.findAll());
+        return ResponseEntity.ok(response);
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> edit(@Valid @RequestBody Course course, BindingResult result, @PathVariable Long id) {

@@ -8,5 +8,5 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface ResponseFeignClient {
     @GetMapping("/student/{studentId}/examsId-answered")
     public Iterable<Long> findExamsIdsWithAnswerByStudentId(@PathVariable Long studentId);
-    
+
     }
