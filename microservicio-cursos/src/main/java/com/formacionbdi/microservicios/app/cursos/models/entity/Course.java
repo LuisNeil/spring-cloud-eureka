@@ -1,5 +1,6 @@
 package com.formacionbdi.microservicios.app.cursos.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.formacionbdi.microservicios.commons.models.entity.Exam;
 import com.formacionbdi.microservicios.commons.students.models.entity.Student;
 
@@ -30,7 +31,12 @@ public class Course {
         this.createAt = new Date();
     }
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties(value = {"course"}, allowSetters = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CourseStudent> courseStudents;
+
+    //@OneToMany(fetch = FetchType.LAZY)
+    @Transient
     private List<Student> students;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -39,6 +45,7 @@ public class Course {
     public Course() {
         this.students = new ArrayList<>();
         this.exams = new ArrayList<>();
+        this.courseStudents = new ArrayList<>();
     }
 
     public Long getId() {
@@ -73,6 +80,14 @@ public class Course {
         this.students = students;
     }
 
+    public List<CourseStudent> getCourseStudents() {
+        return courseStudents;
+    }
+
+    public void setCourseStudents(List<CourseStudent> courseStudents) {
+        this.courseStudents = courseStudents;
+    }
+
     public void addStudent(Student student) {
         this.students.add(student);
     }
@@ -95,5 +110,13 @@ public class Course {
 
     public void removeExam(Exam exam) {
         this.exams.remove(exam);
+    }
+
+    public void addCourseStudents(CourseStudent courseStudent) {
+        this.courseStudents.add(courseStudent);
+    }
+
+    public void removeCourseStudents(CourseStudent courseStudent) {
+        this.courseStudents.remove(courseStudent);
     }
 }

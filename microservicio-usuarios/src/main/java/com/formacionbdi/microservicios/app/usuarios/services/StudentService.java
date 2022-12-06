@@ -10,4 +10,6 @@ import java.util.List;
 public interface StudentService extends CommonService<Student> {
 
     public List<Student> findByNameOrLastName(String term);
+
+    public Iterable<Student> findAllById(Iterable<Long> ids);
 }

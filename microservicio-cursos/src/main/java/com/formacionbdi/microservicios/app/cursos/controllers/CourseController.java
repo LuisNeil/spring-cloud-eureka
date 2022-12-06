@@ -1,11 +1,14 @@
 package com.formacionbdi.microservicios.app.cursos.controllers;
 
 import com.formacionbdi.microservicios.app.cursos.models.entity.Course;
+import com.formacionbdi.microservicios.app.cursos.models.entity.CourseStudent;
 import com.formacionbdi.microservicios.app.cursos.services.CourseService;
 import com.formacionbdi.microservicios.commons.controllers.CommonController;
 import com.formacionbdi.microservicios.commons.models.entity.Exam;
 import com.formacionbdi.microservicios.commons.students.models.entity.Student;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -33,6 +36,53 @@ public class CourseController extends CommonController<Course, CourseService> {
         return ResponseEntity.ok(response);
     }
 
+    @Override
+    @GetMapping
+    public ResponseEntity<?> list() {
+        List<Course> courses = ((List<Course>) service.findAll())
+                .stream()
+                .peek(c-> c.getCourseStudents().forEach(cs -> {
+            Student student = new Student();
+            student.setId(cs.getStudentId());
+            c.addStudent(student);
+        })).collect(Collectors.toList());
+        return ResponseEntity.ok(courses);
+    }
+
+    @Override
+    @GetMapping({"/{id}"})
+    public ResponseEntity<?> detail(@PathVariable Long id) {
+        Optional<Course> o = this.service.findById(id);
+        if(o.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        Course course = o.get();
+        if(!course.getCourseStudents().isEmpty()){
+            List<Long> ids = course
+                    .getCourseStudents()
+                    .stream()
+                    .map(CourseStudent::getStudentId)
+                    .collect(Collectors.toList());
+            List<Student> students = (List<Student>) service.getStudentsByCourse(ids);
+            course.setStudents(students);
+        }
+        return ResponseEntity.ok().body(course);
+    }
+
+    @Override
+    @GetMapping({"/page"})
+    public ResponseEntity<?> list(Pageable pageable) {
+        Page<Course> courses = service.findAll(pageable).map(course -> {
+            course.getCourseStudents().forEach(cs->{
+                Student student = new Student();
+                student.setId(cs.getStudentId());
+                course.addStudent(student);
+            });
+            return course;
+        });
+        return ResponseEntity.ok().body(courses);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<?> edit(@Valid @RequestBody Course course, BindingResult result, @PathVariable Long id) {
         if(result.hasErrors())
@@ -55,7 +105,12 @@ public class CourseController extends CommonController<Course, CourseService> {
         }
 
         Course courseDb = o.get();
-        students.forEach(courseDb::addStudent);
+        students.forEach(s->{
+            CourseStudent cs = new CourseStudent();
+            cs.setStudentId(s.getId());
+            cs.setCourse(courseDb);
+            courseDb.addCourseStudents(cs);
+        });
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(courseDb));
     }
 
@@ -67,7 +122,9 @@ public class CourseController extends CommonController<Course, CourseService> {
         }
 
         Course courseDb = o.get();
-        courseDb.deleteStudent(student);
+        CourseStudent cs = new CourseStudent();
+        cs.setStudentId(student.getId());
+        courseDb.removeCourseStudents(cs);
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(courseDb));
     }
 

@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -88,5 +89,10 @@ public class StudentController extends CommonController<Student, StudentService>
 
         Resource img = new ByteArrayResource(o.get().getPhoto());
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(img);
+    }
+
+    @GetMapping("/students-by-course")
+    public ResponseEntity<?> getStudentsByCourse(@RequestParam List<Long> ids){
+        return ResponseEntity.ok(service.findAllById(ids));
     }
 }
