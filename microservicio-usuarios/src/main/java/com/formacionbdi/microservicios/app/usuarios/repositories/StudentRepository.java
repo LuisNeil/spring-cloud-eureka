@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface StudentRepository extends PagingAndSortingRepository<Student, Long> {
 
-    @Query("select s from  Student s where s.name like %?1% or s.lastname like %?1%")
+    @Query("select s from  Student s where upper(s.name) like upper(concat('%',?1,'%')) or upper(s.lastname) like upper(concat('%',?1,'%')) ")
     public List<Student> findByNameOrLastName(String term);
 }

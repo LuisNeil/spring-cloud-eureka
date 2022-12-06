@@ -168,4 +168,10 @@ public class CourseController extends CommonController<Course, CourseService> {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(courseDb));
     }
 
+    @DeleteMapping("/delete-student/{id}")
+    public ResponseEntity<?> deleteCourseStudentById(@PathVariable Long id){
+        service.deleteCourseStudentById(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

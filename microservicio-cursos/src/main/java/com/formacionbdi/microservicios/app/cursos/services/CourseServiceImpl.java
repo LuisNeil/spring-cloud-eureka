@@ -36,4 +36,10 @@ public class CourseServiceImpl extends CommonServiceImpl<Course, CourseRepositor
     public Iterable<Student> getStudentsByCourse(List<Long> ids) {
         return studentClient.getStudentsByCourse(ids);
     }
+
+    @Override
+    @Transactional
+    public void deleteCourseStudentById(Long id) {
+        repository.deleteCourseStudentById(id);
+    }
 }
