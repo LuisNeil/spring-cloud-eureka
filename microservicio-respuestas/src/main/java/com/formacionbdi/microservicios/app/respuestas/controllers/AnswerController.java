@@ -18,7 +18,10 @@ public class AnswerController {
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Iterable<Answer> answers){
-        answers = ((List<Answer>)answers).stream().peek(a-> a.setStudentId(a.getStudent().getId()))
+        answers = ((List<Answer>)answers).stream().peek(a-> {
+            a.setStudentId(a.getStudent().getId());
+            a.setQuestionId(a.getQuestion().getId());
+        })
                 .collect(Collectors.toList());
         return ResponseEntity.status(HttpStatus.CREATED).body(service.saveAll(answers));
     }

@@ -133,13 +133,16 @@ public class CourseController extends CommonController<Course, CourseService> {
         Course course = service.findCourseByStudentId(studentId);
         if(course != null){
             List<Long> examsIds = (List<Long>) service.findExamsIdsWithAnswerByStudentId(studentId);
-            List<Exam> exams = course.getExams().stream().peek(e -> {
-                if (examsIds.contains(e.getId())){
-                    e.setAnswered(true);
-                }
-            }).collect(Collectors.toList());
+            if(examsIds != null && examsIds.size() > 0){
+                List<Exam> exams = course.getExams().stream().peek(e -> {
+                    if (examsIds.contains(e.getId())){
+                        e.setAnswered(true);
+                    }
+                }).collect(Collectors.toList());
 
-            course.setExams(exams);
+                course.setExams(exams);
+            }
+
         }
         return ResponseEntity.ok(course);
     }

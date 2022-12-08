@@ -2,34 +2,33 @@ package com.formacionbdi.microservicios.app.respuestas.models.entity;
 
 import com.formacionbdi.microservicios.commons.models.entity.Question;
 import com.formacionbdi.microservicios.commons.students.models.entity.Student;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
-
-@Entity
-@Table(name = "answers")
+@Document(collection = "answers")
 public class Answer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     private String text;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
     @Transient
     private Student student;
 
-    @Column(name = "student_id")
     private Long studentId;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @Transient
     private Question question;
 
-    public Long getId() {
+    private Long questionId;
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -63,5 +62,13 @@ public class Answer {
 
     public void setStudentId(Long studentId) {
         this.studentId = studentId;
+    }
+
+    public Long getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestionId(Long questionId) {
+        this.questionId = questionId;
     }
 }
