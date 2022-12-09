@@ -9,5 +9,7 @@ public interface AnswerService {
 
     public Iterable<Long> findExamsIdsWithAnswerByStudentId(Long studentId);
 
+    public Iterable<Answer> findByStudentId(Long studentId);
+
 
 }

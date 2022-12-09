@@ -8,6 +8,7 @@ import com.formacionbdi.microservicios.commons.models.entity.Question;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,6 +49,17 @@ public class AnswerServiceImpl implements AnswerService{
     @Override
     public Iterable<Long> findExamsIdsWithAnswerByStudentId(Long studentId) {
         //return repository.findExamsIdsWithAnswerByStudentId(studentId);
-        return null;
+        List<Answer> answersStudent = (List<Answer>) repository.findByStudentId(studentId);
+        List<Long> examIds = Collections.emptyList();
+        if(answersStudent.size() > 0){
+            List<Long> questionIds = answersStudent.stream().map(Answer::getQuestionId).collect(Collectors.toList());
+            examIds = client.findExamsIdsWithAnswersByQuestionIdAnswered(questionIds);
+        }
+        return examIds;
+    }
+
+    @Override
+    public Iterable<Answer> findByStudentId(Long studentId) {
+        return repository.findByStudentId(studentId);
     }
 }

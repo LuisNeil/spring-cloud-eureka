@@ -29,4 +29,9 @@ public class ExamenServiceImpl extends CommonServiceImpl<Exam, ExamRepository> i
     public Iterable<Subject> findAllSubjects() {
         return subjectRepository.findAll();
     }
+
+    @Override
+    public Iterable<Long> findExamsIdsWithAnswersByQuestionIds(Iterable<Long> questionIds) {
+        return repository.findExamsIdsWithAnswersByQuestionIds(questionIds);
+    }
 }

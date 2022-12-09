@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -50,5 +51,12 @@ public class ExamController extends CommonController<Exam, ExamService> {
     public ResponseEntity<?> listSubjects(){
         return ResponseEntity.ok(service.findAllSubjects());
     }
+
+    @GetMapping("/answered-by-questions")
+    public ResponseEntity<?> findExamsIdsWithAnswersByQuestionIdAnswered(@RequestParam List<Long> questionIds){
+        Iterable<Long> ids = service.findExamsIdsWithAnswersByQuestionIds(questionIds);
+        return ResponseEntity.ok().body(ids);
+    }
+
 
 }
